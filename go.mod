@@ -6,7 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/godruoyi/go-snowflake v0.0.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
-	github.com/sbasestarter/bizinters v0.0.0-20221110051034-9de31177882c
+	github.com/sbasestarter/bizinters v0.0.0-20221110101154-db07b0fb63b4
 	github.com/sbasestarter/bizmongolib v0.0.0-20221031114338-7a90500794d9
 	github.com/sgostarter/i v0.1.12
 	github.com/sgostarter/libeasygo v0.1.33

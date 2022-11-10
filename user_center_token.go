@@ -8,8 +8,9 @@ import (
 )
 
 type TokenUserInfo struct {
-	UserID   uint64
-	UniqueID uint64
+	UserID            uint64
+	UniqueID          uint64
+	TokenLiveDuration time.Duration
 }
 
 type UserClaims struct {
@@ -20,8 +21,9 @@ type UserClaims struct {
 func (impl *userCenterImpl) generateToken(userID, uniqueID uint64, tokenKeepDuration time.Duration) (token string, err error) {
 	token, err = jwt.NewWithClaims(jwt.SigningMethodHS256, UserClaims{
 		TokenUserInfo: TokenUserInfo{
-			UserID:   userID,
-			UniqueID: uniqueID,
+			UserID:            userID,
+			UniqueID:          uniqueID,
+			TokenLiveDuration: tokenKeepDuration,
 		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(tokenKeepDuration).Unix(),

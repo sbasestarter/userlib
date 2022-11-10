@@ -30,13 +30,13 @@ func TestAnonymousUserCenter(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, userinters.LoginStatusSuccess, resp.Status)
 
-	uid, err := uc.CheckToken(ctx, resp.Token)
+	uid, _, err := uc.CheckToken(ctx, resp.Token, false)
 	assert.Nil(t, err)
 	assert.EqualValues(t, resp.UserID, uid)
 
 	time.Sleep(time.Second * 2)
 
-	_, err = uc.CheckToken(ctx, resp.Token)
+	_, _, err = uc.CheckToken(ctx, resp.Token, false)
 	assert.NotNil(t, err)
 }
 

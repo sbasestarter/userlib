@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/godruoyi/go-snowflake"
-	"github.com/patrickmn/go-cache"
 	"github.com/sbasestarter/bizinters/userinters"
 	"github.com/sgostarter/i/l"
 	"github.com/sgostarter/libeasygo/commerr"
@@ -30,7 +29,6 @@ func NewUserCenter(tokenSecKey string, policy userinters.Policy, userStatus user
 		userStatus:             userStatus,
 		authingDataStorage:     authingDataStorage,
 		logger:                 logger.WithFields(l.StringField(l.ClsKey, "userCenterImpl")),
-		dataCache:              cache.New(time.Second, time.Second),
 		loginDataCacheDuration: time.Minute,
 		tokenSecKey:            h[:],
 	}
@@ -42,7 +40,6 @@ type userCenterImpl struct {
 	authingDataStorage userinters.AuthingDataStorage
 	logger             l.Wrapper
 
-	dataCache              *cache.Cache
 	loginDataCacheDuration time.Duration
 	tokenSecKey            interface{}
 }
@@ -214,7 +211,7 @@ func (impl *userCenterImpl) Logout(ctx context.Context, token string) (err error
 	return
 }
 
-func (impl *userCenterImpl) CheckToken(ctx context.Context, token string) (uid uint64, err error) {
+func (impl *userCenterImpl) CheckToken(ctx context.Context, token string, renewToken bool) (newToken string, uid uint64, err error) {
 	info, _, err := impl.parseToken(token)
 	if err != nil {
 		return
@@ -237,6 +234,10 @@ func (impl *userCenterImpl) CheckToken(ctx context.Context, token string) (uid u
 	}
 
 	uid = info.UserID
+
+	if renewToken {
+		newToken, err = impl.generateToken(info.UserID, snowflake.ID(), info.TokenLiveDuration)
+	}
 
 	return
 }
