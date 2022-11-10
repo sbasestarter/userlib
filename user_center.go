@@ -12,9 +12,14 @@ import (
 	"github.com/sgostarter/libeasygo/commerr"
 )
 
-func NewUserCenter(tokenSecKey string, policy userinters.Policy, userStatus userinters.StatusController, logger l.Wrapper) userinters.UserCenter {
+func NewUserCenter(tokenSecKey string, policy userinters.Policy, userStatus userinters.StatusController,
+	authingDataStorage userinters.AuthingDataStorage, logger l.Wrapper) userinters.UserCenter {
 	if logger == nil {
 		logger = l.NewNopLoggerWrapper()
+	}
+
+	if policy == nil || userStatus == nil || authingDataStorage == nil {
+		logger.Fatal("invalid interfaces")
 	}
 
 	// nolint: gosec
@@ -23,6 +28,7 @@ func NewUserCenter(tokenSecKey string, policy userinters.Policy, userStatus user
 	return &userCenterImpl{
 		policy:                 policy,
 		userStatus:             userStatus,
+		authingDataStorage:     authingDataStorage,
 		logger:                 logger.WithFields(l.StringField(l.ClsKey, "userCenterImpl")),
 		dataCache:              cache.New(time.Second, time.Second),
 		loginDataCacheDuration: time.Minute,
@@ -31,9 +37,10 @@ func NewUserCenter(tokenSecKey string, policy userinters.Policy, userStatus user
 }
 
 type userCenterImpl struct {
-	policy     userinters.Policy
-	userStatus userinters.StatusController
-	logger     l.Wrapper
+	policy             userinters.Policy
+	userStatus         userinters.StatusController
+	authingDataStorage userinters.AuthingDataStorage
+	logger             l.Wrapper
 
 	dataCache              *cache.Cache
 	loginDataCacheDuration time.Duration
@@ -62,7 +69,7 @@ func (impl *userCenterImpl) authenticatorsV2M(authenticators []userinters.Authen
 	return
 }
 
-func (impl *userCenterImpl) doAuth(ctx context.Context, d *authForUserPolicy, authenticatorsMap map[string]userinters.Authenticator, logger l.Wrapper) (
+func (impl *userCenterImpl) doAuth(ctx context.Context, d *userinters.AuthingData, authenticatorsMap map[string]userinters.Authenticator, logger l.Wrapper) (
 	nextRequiredMethods []string, err error) {
 	var deadCheckLoop int
 NEXT:
@@ -147,14 +154,14 @@ func (impl *userCenterImpl) Login(ctx context.Context, request *userinters.Login
 		return
 	}
 
-	var d *authForUserPolicy
+	var d *userinters.AuthingData
 
 	if request.ContinueID != 0 {
-		d = impl.loadLoginData(request.ContinueID)
+		d, _ = impl.authingDataStorage.Load(ctx, request.ContinueID)
 	}
 
 	if d == nil {
-		d = &authForUserPolicy{
+		d = &userinters.AuthingData{
 			AuthForUserPolicy: userinters.AuthForUserPolicy{
 				SupportedMethods: methods,
 			},
@@ -175,12 +182,12 @@ func (impl *userCenterImpl) Login(ctx context.Context, request *userinters.Login
 			ContinueID:        d.UniqueID,
 		}
 
-		impl.storeLoginData(d)
+		_ = impl.authingDataStorage.Store(ctx, d, impl.loginDataCacheDuration)
 
 		return
 	}
 
-	impl.delLoginData(d.UniqueID)
+	_ = impl.authingDataStorage.Delete(ctx, d.UniqueID)
 
 	token, err := impl.generateToken(d.UserID, d.UniqueID, request.TokenLiveDuration)
 	if err != nil {

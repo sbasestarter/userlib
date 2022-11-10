@@ -9,9 +9,10 @@ import (
 	"github.com/sbasestarter/bizmongolib/mongolib"
 	userpassmongo "github.com/sbasestarter/bizmongolib/user/authenticator/userpass"
 	"github.com/sbasestarter/userlib/authenticator/userpass"
+	"github.com/sbasestarter/userlib/authingdatastorage/memory"
 	userpassmanager "github.com/sbasestarter/userlib/manager/userpass"
 	"github.com/sbasestarter/userlib/policy/single"
-	"github.com/sbasestarter/userlib/statuscontroller/memory"
+	scmemory "github.com/sbasestarter/userlib/statuscontroller/memory"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +21,7 @@ func TestUserPassUserCenter(t *testing.T) {
 	defer cancel()
 
 	uc := NewUserCenter("x", single.NewPolicy(userinters.AuthMethodNameUserPassword),
-		memory.NewStatusController(), nil)
+		scmemory.NewStatusController(), memory.NewMemoryAuthingDataStorage(), nil)
 
 	mongoCli, err := mongolib.InitMongo("mongodb://mongo_default_user:mongo_default_pass@127.0.0.1:8309/my_db")
 	assert.Nil(t, err)

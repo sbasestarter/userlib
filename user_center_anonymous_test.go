@@ -7,8 +7,9 @@ import (
 
 	"github.com/sbasestarter/bizinters/userinters"
 	"github.com/sbasestarter/userlib/authenticator/anonymous"
+	"github.com/sbasestarter/userlib/authingdatastorage/memory"
 	"github.com/sbasestarter/userlib/policy/single"
-	"github.com/sbasestarter/userlib/statuscontroller/memory"
+	scmemory "github.com/sbasestarter/userlib/statuscontroller/memory"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +18,7 @@ func TestAnonymousUserCenter(t *testing.T) {
 	defer cancel()
 
 	uc := NewUserCenter("x", single.NewPolicy(userinters.AuthMethodNameAnonymous),
-		memory.NewStatusController(), nil)
+		scmemory.NewStatusController(), memory.NewMemoryAuthingDataStorage(), nil)
 
 	resp, err := uc.Login(ctx, &userinters.LoginRequest{
 		ContinueID: 0,
@@ -44,7 +45,7 @@ func TestAnonymousUserCenter2(t *testing.T) {
 	defer cancel()
 
 	uc := NewUserCenter("x", single.NewPolicy(userinters.AuthMethodNameAnonymous),
-		memory.NewStatusController(), nil)
+		scmemory.NewStatusController(), memory.NewMemoryAuthingDataStorage(), nil)
 
 	resp, err := uc.Login(ctx, &userinters.LoginRequest{
 		ContinueID:        0,

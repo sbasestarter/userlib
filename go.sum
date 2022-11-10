@@ -31,8 +31,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZVejAe8=
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
-github.com/sbasestarter/bizinters v0.0.0-20221031114041-ad1c61b67e0d h1:QkiSLJLIahvEK0Zi85WZAkNWcZOPcd2Y3UTsahsYCsA=
-github.com/sbasestarter/bizinters v0.0.0-20221031114041-ad1c61b67e0d/go.mod h1:DLj00sHevmxtwYV12zNlfis1H/+Ecjlp5t5RezyFXiE=
+github.com/sbasestarter/bizinters v0.0.0-20221110051034-9de31177882c h1:Tuj7VCamzQmEQ6ju9UH6n5uu3+6E/CHP06ycYiNFc4s=
+github.com/sbasestarter/bizinters v0.0.0-20221110051034-9de31177882c/go.mod h1:DLj00sHevmxtwYV12zNlfis1H/+Ecjlp5t5RezyFXiE=
 github.com/sbasestarter/bizmongolib v0.0.0-20221031114338-7a90500794d9 h1:VFtE9H0bQowu7/TybikXc5cbTOAQko9lJjGiBEka6yE=
 github.com/sbasestarter/bizmongolib v0.0.0-20221031114338-7a90500794d9/go.mod h1:1m0v24Qd1KN0YnlQ+KfR82zH2iioJXit9iV1hapk/Js=
 github.com/sgostarter/i v0.1.12 h1:U3k2MLDDAOihcJTs9jXXIyBKHi+qu/e4fgHbVrSZCyQ=
