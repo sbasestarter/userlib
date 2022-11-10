@@ -108,7 +108,7 @@ NEXT:
 	var verified bool
 
 	for _, authenticator := range authenticators {
-		uid, ok, _ := authenticator.Verify(ctx)
+		uid, tokenData, ok, _ := authenticator.Verify(ctx)
 		if ok {
 			if uid != 0 {
 				if d.UserID == 0 {
@@ -122,7 +122,10 @@ NEXT:
 
 			verified = true
 
-			d.VerifiedMethods = append(d.VerifiedMethods, authenticator.GetMethodName())
+			d.VerifiedMethods = append(d.VerifiedMethods, &userinters.VerifiedMethodWithTokenData{
+				MethodName: authenticator.GetMethodName(),
+				TokenData:  tokenData,
+			})
 
 			break
 		}
@@ -186,7 +189,18 @@ func (impl *userCenterImpl) Login(ctx context.Context, request *userinters.Login
 
 	_ = impl.authingDataStorage.Delete(ctx, d.UniqueID)
 
-	token, err := impl.generateToken(d.UserID, d.UniqueID, request.TokenLiveDuration)
+	methodDataList := make(map[string]string)
+
+	for _, method := range d.VerifiedMethods {
+		if method.TokenData == "" {
+			continue
+		}
+
+		methodDataList[method.MethodName] = method.TokenData
+	}
+
+	token, err := impl.generateToken(d.UserID, d.UniqueID, methodDataList, request.TokenLiveDuration)
+
 	if err != nil {
 		return
 	}
@@ -211,7 +225,8 @@ func (impl *userCenterImpl) Logout(ctx context.Context, token string) (err error
 	return
 }
 
-func (impl *userCenterImpl) CheckToken(ctx context.Context, token string, renewToken bool) (newToken string, uid uint64, err error) {
+func (impl *userCenterImpl) CheckToken(ctx context.Context, token string, renewToken bool) (newToken string,
+	uid uint64, tokenDataList map[string]string, err error) {
 	info, _, err := impl.parseToken(token)
 	if err != nil {
 		return
@@ -235,8 +250,11 @@ func (impl *userCenterImpl) CheckToken(ctx context.Context, token string, renewT
 
 	uid = info.UserID
 
+	tokenDataList = info.AuthenticatorMethodDataList
+
 	if renewToken {
-		newToken, err = impl.generateToken(info.UserID, snowflake.ID(), info.TokenLiveDuration)
+		newToken, err = impl.generateToken(info.UserID, snowflake.ID(), info.AuthenticatorMethodDataList,
+			info.TokenLiveDuration)
 	}
 
 	return

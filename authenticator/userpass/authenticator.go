@@ -30,6 +30,8 @@ func (impl *authenticator) GetMethodName() string {
 	return userinters.AuthMethodNameUserPassword
 }
 
-func (impl *authenticator) Verify(ctx context.Context) (uid uint64, ok bool, err error) {
-	return impl.verifier.Verify(ctx, impl.user, impl.password)
+func (impl *authenticator) Verify(ctx context.Context) (uid uint64, _ string, ok bool, err error) {
+	uid, ok, err = impl.verifier.Verify(ctx, impl.user, impl.password)
+
+	return
 }

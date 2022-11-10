@@ -7,19 +7,23 @@ import (
 	"github.com/sbasestarter/bizinters/userinters"
 )
 
-func NewAuthenticator() userinters.Authenticator {
-	return &authenticator{}
+func NewAuthenticator(userName string) userinters.Authenticator {
+	return &authenticator{
+		userName: userName,
+	}
 }
 
 type authenticator struct {
+	userName string
 }
 
 func (impl *authenticator) GetMethodName() (method string) {
 	return userinters.AuthMethodNameAnonymous
 }
 
-func (impl *authenticator) Verify(_ context.Context) (uid uint64, ok bool, _ error) {
+func (impl *authenticator) Verify(_ context.Context) (uid uint64, tokenData string, ok bool, _ error) {
 	uid = snowflake.ID()
+	tokenData = impl.userName
 	ok = true
 
 	return

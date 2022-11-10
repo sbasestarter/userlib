@@ -25,7 +25,7 @@ func (impl *policyImpl) RequireAuthMethod(_ context.Context, d *userinters.AuthF
 	}
 
 	for _, method := range d.VerifiedMethods {
-		if method == impl.requiredMethodName {
+		if method.MethodName == impl.requiredMethodName {
 			return
 		}
 	}

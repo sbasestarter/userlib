@@ -16,6 +16,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// nolint
 func TestUserPassUserCenter(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -47,12 +48,12 @@ func TestUserPassUserCenter(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, userinters.LoginStatusSuccess, resp.Status)
 
-	uid, _, err := uc.CheckToken(ctx, resp.Token, false)
+	_, uid, _, err := uc.CheckToken(ctx, resp.Token, false)
 	assert.Nil(t, err)
 	assert.EqualValues(t, resp.UserID, uid)
 
 	time.Sleep(time.Second * 2)
 
-	_, _, err = uc.CheckToken(ctx, resp.Token, false)
+	_, _, _, err = uc.CheckToken(ctx, resp.Token, false)
 	assert.NotNil(t, err)
 }
