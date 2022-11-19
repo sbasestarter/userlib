@@ -2,28 +2,36 @@ package anonymous
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/godruoyi/go-snowflake"
 	"github.com/sbasestarter/bizinters/userinters"
 )
 
-func NewAuthenticator(userName string) userinters.Authenticator {
+func NewAuthenticator(ds map[string]interface{}) userinters.Authenticator {
 	return &authenticator{
-		userName: userName,
+		ds: ds,
 	}
 }
 
 type authenticator struct {
-	userName string
+	ds map[string]interface{}
 }
 
 func (impl *authenticator) GetMethodName() (method string) {
 	return userinters.AuthMethodNameAnonymous
 }
 
-func (impl *authenticator) Verify(_ context.Context) (uid uint64, tokenData string, ok bool, _ error) {
+func (impl *authenticator) Verify(_ context.Context) (uid uint64, tokenData []byte, ok bool, err error) {
 	uid = snowflake.ID()
-	tokenData = impl.userName
+
+	if len(impl.ds) > 0 {
+		tokenData, err = json.Marshal(impl.ds)
+		if err != nil {
+			return
+		}
+	}
+
 	ok = true
 
 	return

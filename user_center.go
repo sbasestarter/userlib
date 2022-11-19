@@ -189,10 +189,10 @@ func (impl *userCenterImpl) Login(ctx context.Context, request *userinters.Login
 
 	_ = impl.authingDataStorage.Delete(ctx, d.UniqueID)
 
-	methodDataList := make(map[string]string)
+	methodDataList := make(map[string][]byte)
 
 	for _, method := range d.VerifiedMethods {
-		if method.TokenData == "" {
+		if len(method.TokenData) == 0 {
 			continue
 		}
 
@@ -226,7 +226,7 @@ func (impl *userCenterImpl) Logout(ctx context.Context, token string) (err error
 }
 
 func (impl *userCenterImpl) CheckToken(ctx context.Context, token string, renewToken bool) (newToken string,
-	uid uint64, tokenDataList map[string]string, err error) {
+	uid uint64, tokenDataList map[string][]byte, err error) {
 	info, _, err := impl.parseToken(token)
 	if err != nil {
 		return

@@ -24,7 +24,7 @@ func TestUserPassUserCenter(t *testing.T) {
 	uc := NewUserCenter("x", single.NewPolicy(userinters.AuthMethodNameUserPassword),
 		scmemory.NewStatusController(), memory.NewMemoryAuthingDataStorage(), nil)
 
-	mongoCli, err := mongolib.InitMongo("mongodb://mongo_default_user:mongo_default_pass@127.0.0.1:8309/my_db")
+	mongoCli, _, err := mongolib.InitMongo("mongodb://mongo_default_user:mongo_default_pass@127.0.0.1:8309/my_db")
 	assert.Nil(t, err)
 
 	manager := userpassmanager.NewManager("x", userpassmongo.NewMongoUserPasswordModel(mongoCli, "my_db", "users", nil))

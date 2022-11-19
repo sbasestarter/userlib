@@ -11,7 +11,7 @@ type TokenUserInfo struct {
 	UserID                      uint64            `json:"user_id,omitempty"`
 	UniqueID                    uint64            `json:"unique_id,omitempty"`
 	TokenLiveDuration           time.Duration     `json:"token_live_duration,omitempty"`
-	AuthenticatorMethodDataList map[string]string `json:"authenticator_method_data_list,omitempty"`
+	AuthenticatorMethodDataList map[string][]byte `json:"authenticator_method_data_list,omitempty"`
 }
 
 type UserClaims struct {
@@ -19,7 +19,7 @@ type UserClaims struct {
 	jwt.StandardClaims
 }
 
-func (impl *userCenterImpl) generateToken(userID, uniqueID uint64, methodDataList map[string]string, tokenKeepDuration time.Duration) (token string, err error) {
+func (impl *userCenterImpl) generateToken(userID, uniqueID uint64, methodDataList map[string][]byte, tokenKeepDuration time.Duration) (token string, err error) {
 	token, err = jwt.NewWithClaims(jwt.SigningMethodHS256, UserClaims{
 		TokenUserInfo: TokenUserInfo{
 			UserID:                      userID,
