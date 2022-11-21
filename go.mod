@@ -6,10 +6,10 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/godruoyi/go-snowflake v0.0.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
-	github.com/sbasestarter/bizinters v0.0.2
-	github.com/sbasestarter/bizmongolib v0.0.2
+	github.com/sbasestarter/bizinters v0.0.3
+	github.com/sbasestarter/bizmongolib v0.0.3
 	github.com/sgostarter/i v0.1.13
-	github.com/sgostarter/libeasygo v0.1.33
+	github.com/sgostarter/libeasygo v0.1.36
 	github.com/stretchr/testify v1.8.1
 )
 

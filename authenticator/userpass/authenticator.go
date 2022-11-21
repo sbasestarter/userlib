@@ -5,7 +5,7 @@ import (
 
 	"github.com/sbasestarter/bizinters/userinters"
 	inters "github.com/sbasestarter/bizinters/userinters/userpass"
-	"github.com/sgostarter/libeasygo/commerr"
+	"github.com/sgostarter/i/commerr"
 )
 
 func NewAuthenticator(user, password string, verifier inters.UserPasswordVerifier) (userinters.Authenticator, error) {

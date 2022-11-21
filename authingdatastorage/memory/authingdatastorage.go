@@ -7,7 +7,7 @@ import (
 
 	"github.com/patrickmn/go-cache"
 	"github.com/sbasestarter/bizinters/userinters"
-	"github.com/sgostarter/libeasygo/commerr"
+	"github.com/sgostarter/i/commerr"
 )
 
 func NewMemoryAuthingDataStorage() userinters.AuthingDataStorage {

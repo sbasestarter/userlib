@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/sgostarter/libeasygo/commerr"
+	"github.com/sgostarter/i/commerr"
 )
 
 type TokenUserInfo struct {

@@ -7,8 +7,8 @@ import (
 
 	"github.com/godruoyi/go-snowflake"
 	"github.com/sbasestarter/bizinters/userinters"
+	"github.com/sgostarter/i/commerr"
 	"github.com/sgostarter/i/l"
-	"github.com/sgostarter/libeasygo/commerr"
 )
 
 func NewUserCenter(tokenSecKey string, policy userinters.Policy, userStatus userinters.StatusController,

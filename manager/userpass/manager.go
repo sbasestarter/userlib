@@ -4,7 +4,7 @@ import (
 	"context"
 
 	inters "github.com/sbasestarter/bizinters/userinters/userpass"
-	"github.com/sgostarter/libeasygo/commerr"
+	"github.com/sgostarter/i/commerr"
 	"github.com/sgostarter/libeasygo/crypt"
 )
 
@@ -14,6 +14,9 @@ type Manager interface {
 	Register(ctx context.Context, userName, password string) (userID uint64, err error)
 	GetUser(ctx context.Context, userID uint64) (user *User, err error)
 	GetUserByUserName(ctx context.Context, userName string) (user *User, err error)
+
+	UpdateUserExData(ctx context.Context, userID uint64, key string, val interface{}) error
+	UpdateUserAllExData(ctx context.Context, userID uint64, exData map[string]interface{}) error
 }
 
 func NewManager(passwordSecret string, model inters.UserPasswordModel) Manager {
@@ -85,6 +88,7 @@ func (impl *managerImpl) GetUser(ctx context.Context, userID uint64) (user *User
 		ID:       u.ID,
 		UserName: u.UserName,
 		CreateAt: u.CreateAt,
+		ExData:   u.ExData,
 	}
 
 	return
@@ -100,7 +104,16 @@ func (impl *managerImpl) GetUserByUserName(ctx context.Context, userName string)
 		ID:       u.ID,
 		UserName: u.UserName,
 		CreateAt: u.CreateAt,
+		ExData:   u.ExData,
 	}
 
 	return
+}
+
+func (impl *managerImpl) UpdateUserExData(ctx context.Context, userID uint64, key string, val interface{}) error {
+	return impl.model.UpdateUserExData(ctx, userID, key, val)
+}
+
+func (impl *managerImpl) UpdateUserAllExData(ctx context.Context, userID uint64, exData map[string]interface{}) error {
+	return impl.model.UpdateUserAllExData(ctx, userID, exData)
 }

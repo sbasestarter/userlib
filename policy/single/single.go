@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/sbasestarter/bizinters/userinters"
-	"github.com/sgostarter/libeasygo/commerr"
+	"github.com/sgostarter/i/commerr"
 )
 
 func NewPolicy(requiredMethodName string) userinters.Policy {
